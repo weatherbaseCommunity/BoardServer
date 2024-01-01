@@ -2,7 +2,9 @@ package com.example.makeboard0629.controller;
 
 import com.example.makeboard0629.dto.SignInDto;
 import com.example.makeboard0629.dto.SignUpDto;
+import com.example.makeboard0629.dto.TokenDto;
 import com.example.makeboard0629.jwt.TokenProvider;
+import com.example.makeboard0629.service.JwtService;
 import com.example.makeboard0629.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AuthController {
     private final MemberService memberService;
+    private final JwtService jwtService;
     private final TokenProvider tokenProvider;
 
     @PostMapping("/signup")
@@ -31,7 +34,9 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody SignInDto signInDto){
         var member = memberService.authenticate(signInDto);
-        var token = tokenProvider.generateToken(member.getEmail(), member.getRoles());
+        var token = tokenProvider.generateToken(member.getEmail(), member.getUserRole());
+
+        jwtService.login(token, signInDto);
 
         return ResponseEntity.ok(token);
     }

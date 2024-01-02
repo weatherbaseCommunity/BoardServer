@@ -121,9 +121,7 @@ public class TokenProvider {
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info(String.format("exception : %s, message : 잘못된 JWT 서명입니다.", e.getClass().getName()));
-        } catch (ExpiredJwtException e) {
-            log.info(String.format("exception : %s, message : 만료된 JWT 토큰입니다.", e.getClass().getName()));
-        } catch (UnsupportedJwtException e) {
+        }  catch (UnsupportedJwtException e) {
             log.info(String.format("exception : %s, message : 지원되지 않는 JWT 토큰입니다.", e.getClass().getName()));
         } catch (IllegalArgumentException e) {
             log.info(String.format("exception : %s, message : JWT 토큰이 잘못되었습니다.", e.getClass().getName()));
@@ -133,11 +131,11 @@ public class TokenProvider {
 
     }
 
-    public String validateRefreshToken(RefreshToken refreshTokenObj){
+    public String validateRefreshToken(String refreshToken){
 
 
         // refresh 객체에서 refreshToken 추출
-        String refreshToken = refreshTokenObj.getRefreshToken();
+//        String refreshToken = refreshTokenObj.getRefreshToken();
 
 
         try {

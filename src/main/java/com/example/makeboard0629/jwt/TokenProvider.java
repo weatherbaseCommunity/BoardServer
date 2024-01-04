@@ -25,7 +25,7 @@ import java.util.Date;
 public class TokenProvider {
 
     private static final String KEY_ROLES = "roles";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60; //* 60; //1hour
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60; //1hour
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14; //14days
 
     private final MemberService memberService;

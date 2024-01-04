@@ -71,7 +71,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests.requestMatchers("/api/hello").permitAll()
-                                .requestMatchers("/test/login/kakao").permitAll()
+                                .requestMatchers("/login/oauth2/code/kakao").permitAll()
                                 .requestMatchers("/test/login/naver").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers(WHITE_LIST).permitAll()

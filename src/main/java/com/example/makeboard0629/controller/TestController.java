@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/test")
+//@RequestMapping("/test")
 public class TestController {
     private final Oauth2Service oauth2Service;
     private final MemberService memberService;
@@ -43,8 +43,8 @@ public class TestController {
         return ResponseEntity.ok("testuser");
     }
 
-    @PostMapping("/login/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestBody String code) {
+    @PostMapping("/login/oauth2/code/kakao")
+    public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
 
         SignUpDto signUpDto = oauth2Service.getKakaoToken(code);
         Member member = memberService.oauth2Register(signUpDto);
@@ -56,6 +56,14 @@ public class TestController {
         jwtService.login(token, signInDto);
 
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/login/naver")
+    public ResponseEntity<?> naverLogin(@RequestBody String code) {
+
+        SignUpDto signUpDto = oauth2Service.getNaverToken(code);
+
+        return ResponseEntity.ok().build();
     }
 
 

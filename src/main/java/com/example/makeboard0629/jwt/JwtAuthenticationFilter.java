@@ -8,11 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -41,8 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         }catch (ExpiredJwtException e) {	// 변경
-            //todo : 토큰 만료 체크후 리프레시토큰 체크후 코드 발급 로직 필요
-            // https://colabear754.tistory.com/179#%EB%A6%AC%ED%94%84%EB%A0%88%EC%8B%9C_%ED%86%A0%ED%81%B0%EC%9D%84_%ED%86%B5%ED%95%B4_%EC%95%A1%EC%84%B8%EC%8A%A4_%ED%86%A0%ED%81%B0%EC%9D%84_%EA%B0%B1%EC%8B%A0%ED%95%B4%EB%B3%B4%EC%9E%90!
             log.info(String.format("exception : %s, message : 만료된 JWT 토큰입니다.", e.getClass().getName()));
             reissueAccessToken(request, response, e);
         } catch (Exception e) {
@@ -69,7 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void reissueAccessToken(HttpServletRequest request, HttpServletResponse response, Exception exception) {
         try {
-            String refreshToken = parseBearerToken(request, "Refresh-Token");
+//
+            String refreshToken =  parseBearerToken(request, "Refresh-Token");
             if (refreshToken == null) {
                 throw exception;
             }

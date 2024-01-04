@@ -28,8 +28,10 @@ public class SwaggerConfig {
                                 .bearerFormat("JWT"))
                         .addSecuritySchemes(SECURITY_SCHEME_NAME2, new SecurityScheme()
                                 .type(SecurityScheme.Type.APIKEY)
+                                .scheme("bearer")
                                 .in(SecurityScheme.In.HEADER)
                                 .name(SECURITY_SCHEME_NAME2)
+                                .bearerFormat("JWT")
                         ))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME).addList(SECURITY_SCHEME_NAME2))
 

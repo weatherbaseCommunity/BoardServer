@@ -29,8 +29,6 @@ public class Member implements UserDetails {
     @JsonIgnore
     private String password;
 
-
-
     @Enumerated(EnumType.STRING)
     private Authority userRole;
 

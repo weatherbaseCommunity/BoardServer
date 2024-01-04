@@ -16,20 +16,36 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Service
 public class Oauth2Service {
-    private final String client_secret;
-    private final String clientId;
-    private final String redirectUrl;
-    private final String grant_type;
+    private final String kakaoClient_secret;
+    private final String kakaoClientId;
+    private final String kakaoRedirectUrl;
+    private final String kakaoGrant_type;
 
-    public Oauth2Service(@Value("${spring.security.oauth2.client.registration.kakao.client-secret}") String secret,
-                         @Value("${spring.security.oauth2.client.registration.kakao.client-id}") String clientId,
-                         @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}") String redirectUrl,
-                         @Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}") String grant_type
+    private final String naverClient_secret;
+    private final String naverClientId;
+    private final String naverRedirectUrl;
+    private final String naverGrant_type;
+
+
+    public Oauth2Service(@Value("${spring.security.oauth2.client.registration.kakao.client-secret}") String kakaoClient_secret,
+                         @Value("${spring.security.oauth2.client.registration.kakao.client-id}") String kakaoClientId,
+                         @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}") String kakaoRedirectUrl,
+                         @Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}") String kakaoGrant_type,
+
+                         @Value("${spring.security.oauth2.client.registration.naver.client-id}") String naverClientId,
+                         @Value("${spring.security.oauth2.client.registration.naver.client-secret}") String naverClient_secret,
+                         @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}") String naverRedirectUrl,
+                         @Value("${spring.security.oauth2.client.registration.naver.authorization-grant-type}") String naverGrant_type
     ) {
-        this.client_secret = secret;
-        this.clientId = clientId;
-        this.redirectUrl = redirectUrl;
-        this.grant_type = grant_type;
+        this.kakaoClient_secret = kakaoClient_secret;
+        this.kakaoClientId = kakaoClientId;
+        this.kakaoRedirectUrl = kakaoRedirectUrl;
+        this.kakaoGrant_type = kakaoGrant_type;
+
+        this.naverClientId = naverClientId;
+        this.naverClient_secret = naverClient_secret;
+        this.naverRedirectUrl = naverRedirectUrl;
+        this.naverGrant_type = naverGrant_type;
     }
 
     public SignUpDto getKakaoToken(String code) {
@@ -47,11 +63,11 @@ public class Oauth2Service {
 
         // HttpBody 객체 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", grant_type);
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUrl);
+        params.add("grant_type", kakaoGrant_type);
+        params.add("client_id", kakaoClientId);
+        params.add("redirect_uri", kakaoRedirectUrl);
         params.add("code", code);
-        params.add("client_secret", client_secret);
+        params.add("client_secret", kakaoClient_secret);
 
         // HttpHeader와 HttpBody를 하나의 객체에 담기 -> 만든 이유 : 아래의 exchange 함수에 HttpEntity를 넣어야 해서..
         HttpEntity<MultiValueMap<String, String>> request =
@@ -66,8 +82,6 @@ public class Oauth2Service {
         );
         System.out.println(response);
 
-        // 토큰값 Json 형식으로 가져오기위해 생성
-//        JSONObject jsonObject = new  JSONObject(response.getBody());
 
         ObjectMapper objectMapper = new ObjectMapper();
         OAuth2Token oAuth2Token = new OAuth2Token();
@@ -116,6 +130,41 @@ public class Oauth2Service {
                 .email(kakaoUser.getKakao_account().getEmail()+kakaoUser.getId())
                 .password(kakaoUser.getId()+kakaoUser.getKakao_account().getProfile().getNickname())
                 .build();
+    }
+
+    public SignUpDto getNaverToken(String code){
+
+        RestTemplate rt = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", naverClientId);
+        params.add("client_secret", naverClient_secret);
+        params.add("grant_type", naverGrant_type);
+        params.add("state", "weatherBoard");  // state 일치를 확인
+        params.add("code", code);
+
+        HttpEntity<MultiValueMap<String,String>> naverTokenRequest = new HttpEntity<>(params,httpHeaders);
+
+        ResponseEntity<String> response = rt.exchange(
+                "https://nid.naver.com/oauth2.0/token",
+                HttpMethod.POST,
+                naverTokenRequest,
+                String.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        OAuth2Token oAuth2Token = new OAuth2Token();
+        try {
+            oAuth2Token = objectMapper.readValue(response.getBody(), OAuth2Token.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        // 토큰결과값
+        log.info("네이버 엑세스 토큰 : " + oAuth2Token.getAccess_token());
+
+        return SignUpDto.builder().build();
     }
 
 

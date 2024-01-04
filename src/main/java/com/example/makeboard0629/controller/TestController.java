@@ -1,5 +1,6 @@
 package com.example.makeboard0629.controller;
 
+import com.example.makeboard0629.dto.CodeDto;
 import com.example.makeboard0629.dto.SignInDto;
 import com.example.makeboard0629.dto.SignUpDto;
 import com.example.makeboard0629.entity.Member;
@@ -44,8 +45,8 @@ public class TestController {
     }
 
     @PostMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestBody String code) {
-
+    public ResponseEntity<?> kakaoLogin(@RequestBody CodeDto codeDto) {
+        String code = codeDto.getCode();
         SignUpDto signUpDto = oauth2Service.getKakaoToken(code);
         Member member = memberService.oauth2Register(signUpDto);
         var token = tokenProvider.generateToken(member.getEmail(), member.getUserRole());

@@ -69,7 +69,6 @@ public class SecurityConfig {
                 .sessionManagement((sessionManagement)
                         -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests.requestMatchers("/api/hello").permitAll()
                                 .requestMatchers("/test/login/kakao").permitAll()

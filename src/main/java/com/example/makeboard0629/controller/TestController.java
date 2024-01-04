@@ -44,7 +44,7 @@ public class TestController {
     }
 
     @PostMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
+    public ResponseEntity<?> kakaoLogin(@RequestBody String code) {
 
         SignUpDto signUpDto = oauth2Service.getKakaoToken(code);
         Member member = memberService.oauth2Register(signUpDto);

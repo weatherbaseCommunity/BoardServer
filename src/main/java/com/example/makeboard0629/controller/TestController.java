@@ -59,12 +59,19 @@ public class TestController {
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/login/naver")
+    @PostMapping("/login/oauth2/code/naver")
     public ResponseEntity<?> naverLogin(@RequestBody String code) {
 
         SignUpDto signUpDto = oauth2Service.getNaverToken(code);
+        Member member = memberService.oauth2Register(signUpDto);
+        var token = tokenProvider.generateToken(member.getEmail(), member.getUserRole());
+        SignInDto signInDto = SignInDto.builder()
+                .email(signUpDto.getEmail())
+                .password(signUpDto.getPassword())
+                .build();
+        jwtService.login(token, signInDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(token);
     }
 
 

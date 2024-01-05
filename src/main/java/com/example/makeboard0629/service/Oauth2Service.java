@@ -2,6 +2,7 @@ package com.example.makeboard0629.service;
 
 import com.example.makeboard0629.dto.SignUpDto;
 import com.example.makeboard0629.model.KakaoUser;
+import com.example.makeboard0629.model.NaverUser;
 import com.example.makeboard0629.model.OAuth2Token;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -127,22 +128,23 @@ public class Oauth2Service {
         System.out.println("카카오 이메일 : " + kakaoUser.getKakao_account().getEmail());
 
         return SignUpDto.builder()
-                .email(kakaoUser.getKakao_account().getEmail()+kakaoUser.getId())
+                .email(kakaoUser.getKakao_account().getEmail()+"kakao")
                 .password(kakaoUser.getId()+kakaoUser.getKakao_account().getProfile().getNickname())
                 .build();
     }
 
     public SignUpDto getNaverToken(String code){
-
+        System.out.println(code);
         RestTemplate rt = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
+
         MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", naverGrant_type);
         params.add("client_id", naverClientId);
         params.add("client_secret", naverClient_secret);
-        params.add("grant_type", naverGrant_type);
-        params.add("state", "weatherBoard");  // state 일치를 확인
+        params.add("state", "dasehLiDdL2uhPtsftcU");  // state 일치를 확인
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String,String>> naverTokenRequest = new HttpEntity<>(params,httpHeaders);
@@ -153,7 +155,7 @@ public class Oauth2Service {
                 naverTokenRequest,
                 String.class
         );
-
+        System.out.println(response);
         ObjectMapper objectMapper = new ObjectMapper();
         OAuth2Token oAuth2Token = new OAuth2Token();
         try {
@@ -164,7 +166,42 @@ public class Oauth2Service {
         // 토큰결과값
         log.info("네이버 엑세스 토큰 : " + oAuth2Token.getAccess_token());
 
-        return SignUpDto.builder().build();
+
+        RestTemplate rt2 = new RestTemplate();
+        HttpHeaders headers2 = new HttpHeaders();
+
+        headers2.add("Authorization", "Bearer "+ oAuth2Token.getAccess_token());
+        headers2.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String,String >> naverProfileRequest2= new HttpEntity<>(headers2);
+
+        ResponseEntity<String> response2 = rt2.exchange(
+                "https://openapi.naver.com/v1/nid/me",
+                HttpMethod.POST,
+                naverProfileRequest2,
+                String.class
+        );
+
+        System.out.println(response2);
+
+        // 이후 유저 여부를 판단하고 회원가입 / 로그인 처리를 진행하면된다
+        ObjectMapper objectMapper2 = new ObjectMapper();
+
+        NaverUser naverUser = null;
+        try {
+            naverUser = objectMapper2.readValue(response2.getBody(), NaverUser.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        assert naverUser != null;
+        System.out.println("네이버 아이디(번호) : " + naverUser.getResponse().getId());
+        System.out.println("네이버 이메일 : " + naverUser.getResponse().getEmail());
+
+        return SignUpDto.builder()
+                .email(naverUser.getResponse().getEmail()+"naver")
+                .password(naverUser.getResponse().getId()+naverUser.getResponse().getName())
+                .build();
     }
 
 

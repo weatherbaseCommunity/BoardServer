@@ -1,7 +1,6 @@
 package com.example.makeboard0629.jwt;
 
 import com.example.makeboard0629.dto.TokenDto;
-import com.example.makeboard0629.entity.RefreshToken;
 import com.example.makeboard0629.service.MemberService;
 import com.example.makeboard0629.type.Authority;
 import io.jsonwebtoken.*;

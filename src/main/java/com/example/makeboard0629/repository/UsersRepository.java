@@ -1,13 +1,13 @@
 package com.example.makeboard0629.repository;
 
-import com.example.makeboard0629.entity.Member;
+import com.example.makeboard0629.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface UsersRepository extends JpaRepository<Users, Long> {
 
-    Optional<Member> findByEmail(String email);
+    Optional<Users> findByEmail(String email);
 
     boolean existsByEmail (String email);
 }

@@ -5,21 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@ToString
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Getter
-public class Member implements UserDetails {
+public class Users extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +29,21 @@ public class Member implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Authority userRole;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Board> boards = new ArrayList<>();     // 작성글
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();       // 유저가 누른 좋아요
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>(); // 댓글
+
+
+
+
+
+
 
     @JsonIgnore
     @Override

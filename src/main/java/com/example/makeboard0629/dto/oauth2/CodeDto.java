@@ -1,4 +1,4 @@
-package com.example.makeboard0629.dto;
+package com.example.makeboard0629.dto.oauth2;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

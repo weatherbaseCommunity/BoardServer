@@ -272,7 +272,7 @@ public class Oauth2Service {
                 String.class
         );
 
-        log.info(response2);
+        log.info("reponse2 = " +response2);
 
         // 이후 유저 여부를 판단하고 회원가입 / 로그인 처리를 진행하면된다
         ObjectMapper objectMapper2 = new ObjectMapper();

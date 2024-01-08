@@ -1,14 +1,12 @@
 package com.example.makeboard0629.service.board;
-
 import com.example.makeboard0629.dto.board.BoardDto;
-
 import com.example.makeboard0629.dto.board.BoardsDto;
 import com.example.makeboard0629.entity.Board;
-import com.example.makeboard0629.entity.Users;
+import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.repository.BoardRepository;
 import com.example.makeboard0629.repository.CommentRepository;
 import com.example.makeboard0629.repository.LikeRepository;
-import com.example.makeboard0629.repository.UsersRepository;
+import com.example.makeboard0629.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +16,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
 
     public void saveBoard(BoardDto boardDto, String email) {
-        Users user = usersRepository.findByEmail(email).orElseThrow(NullPointerException::new);
+        User user = userRepository.findByEmail(email).orElseThrow(NullPointerException::new);
         Board board = Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
@@ -57,7 +55,7 @@ public class BoardService {
 
     public List<BoardsDto> getMyBoards(String uniqueId) {
         List<BoardsDto> myBoards = new ArrayList<>();
-        List<Board> myBoard = boardRepository.findByUserUniqueId(uniqueId);
+        List<Board> myBoard = boardRepository.findByUserEmail(uniqueId);
         for (Board board : myBoard) {
             myBoards.add(BoardsDto.builder()
                     .id(board.getId())

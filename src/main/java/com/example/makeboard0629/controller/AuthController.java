@@ -3,7 +3,7 @@ package com.example.makeboard0629.controller;
 import com.example.makeboard0629.dto.oauth2.CodeDto;
 import com.example.makeboard0629.dto.SignInDto;
 import com.example.makeboard0629.dto.SignUpDto;
-import com.example.makeboard0629.entity.Users;
+import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.jwt.TokenProvider;
 import com.example.makeboard0629.service.JwtService;
 import com.example.makeboard0629.service.MemberService;
@@ -37,12 +37,13 @@ public class AuthController {
     public ResponseEntity<?> kakaoLogin(@RequestBody CodeDto codeDto) {
         String code = codeDto.getCode();
         SignUpDto signUpDto = oauth2Service.getKakaoToken(code);
-        Users user = memberService.oauth2Register(signUpDto);
+        User user = memberService.oauth2Register(signUpDto);
         var token = tokenProvider.generateToken(user.getEmail(), user.getUserRole());
         SignInDto signInDto = SignInDto.builder()
                 .email(signUpDto.getEmail())
                 .password(signUpDto.getPassword())
                 .build();
+
         jwtService.login(token, signInDto);
 
         return ResponseEntity.ok(token);
@@ -52,7 +53,7 @@ public class AuthController {
     public ResponseEntity<?> naverLogin(@RequestBody CodeDto codeDto) {
         String code = codeDto.getCode();
         SignUpDto signUpDto = oauth2Service.getNaverToken(code);
-        Users user = memberService.oauth2Register(signUpDto);
+        User user = memberService.oauth2Register(signUpDto);
         var token = tokenProvider.generateToken(user.getEmail(), user.getUserRole());
         SignInDto signInDto = SignInDto.builder()
                 .email(signUpDto.getEmail())
@@ -67,7 +68,7 @@ public class AuthController {
     public ResponseEntity<?> googleLogin(@RequestBody CodeDto codeDto) {
         String code = codeDto.getCode();
         SignUpDto signUpDto = oauth2Service.getGoogleToken(code);
-        Users user = memberService.oauth2Register(signUpDto);
+        User user = memberService.oauth2Register(signUpDto);
         var token = tokenProvider.generateToken(user.getEmail(), user.getUserRole());
         SignInDto signInDto = SignInDto.builder()
                 .email(signUpDto.getEmail())

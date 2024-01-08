@@ -18,7 +18,7 @@ public class Like extends BaseEntity{
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Users user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;    // 좋아요가 추가된 게시글

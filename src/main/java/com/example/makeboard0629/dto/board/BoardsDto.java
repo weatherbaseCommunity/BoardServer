@@ -4,12 +4,10 @@ import com.example.makeboard0629.entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class BoardsDto {
     private Long id;
     private String title;
@@ -23,7 +21,7 @@ public class BoardsDto {
         this.title = board.getTitle();
         this.commentCnt = board.getCommentCnt();
         this.lickCnt = board.getLikeCnt();
-        this.weatherUrl = board.getWeatherUrl();
-        this.hashTag = board.getHashTag();
+        this.weatherUrl = builder().weatherUrl;
+        this.hashTag = builder().hashTag;
     }
 }

@@ -1,7 +1,7 @@
 package com.example.makeboard0629.repository;
 
 import com.example.makeboard0629.entity.Like;
-import com.example.makeboard0629.entity.Users;
+import com.example.makeboard0629.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,6 +12,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     Boolean existsByUserEmailAndBoardId(String userNickname, Long boardId);
     List<Like> findAllByUserEmail(String uniqueId);
     List<Like> findAllByBoardId(Long boardId);
-    Optional<Like> findByUserAndBoardId(Users users, Long board_id);
+    Optional<Like> findByUserAndBoardId(User user, Long board_id);
 
 }

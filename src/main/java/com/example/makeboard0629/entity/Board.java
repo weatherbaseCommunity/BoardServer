@@ -27,7 +27,7 @@ public class Board extends BaseEntity{
     private String weatherUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Users user;      // 작성자
+    private User user;      // 작성자
 
     @OneToMany(mappedBy = "board", orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();       // 좋아요

@@ -28,12 +28,26 @@ public class User extends BaseEntity implements UserDetails{
     @JsonIgnore
     private String password;
 
+    private String nickName;
+
     @Enumerated(EnumType.STRING)
     private Authority userRole;
 
 
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Board> boards = new ArrayList<>();     // 작성글
 
+    public void addBoard(Board board){
+        boards.add(board);
+        board.setUser(this);
+    }
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();       // 유저가 누른 좋아요
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>(); // 댓글
 
 
 

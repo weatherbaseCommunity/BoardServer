@@ -32,6 +32,11 @@ public class Board extends BaseEntity{
     @OneToMany(mappedBy = "board", orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();       // 좋아요
 
+    public void addLike(Like like){
+        likes.add(like);
+        like.setBoard(this);
+    }
+
     @ColumnDefault("0")
     private Integer likeCnt;        // 좋아요 수
 
@@ -40,16 +45,16 @@ public class Board extends BaseEntity{
     @ColumnDefault("0")
     private Integer commentCnt;     // 댓글 수
 
-    public void addLike(Like like){
-        likes.add(like);
-        like.setBoard(this);
-    }
+
     public void changeLikeCnt(Integer likeCnt){
         this.likeCnt = likeCnt;
     }
     public void updateBoard(String title, String content){
         this.title = title;
         this.content = content;
+    }
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

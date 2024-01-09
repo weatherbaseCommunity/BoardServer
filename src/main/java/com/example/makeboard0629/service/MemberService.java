@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -36,6 +37,7 @@ public class MemberService implements UserDetailsService {
                 .userRole(Authority.ROLE_USER)
                 .email(signUpDto.getEmail())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
+                .nickName(UUID.randomUUID().toString().substring(0, 8))
                 .build();
         return userRepository.save(user);
     }
@@ -73,13 +75,14 @@ public class MemberService implements UserDetailsService {
                     .email(signUpDto.getEmail())
                     .password(passwordEncoder.encode(signUpDto.getPassword()))
                     .userRole(Authority.ROLE_USER)
+                    .nickName(UUID.randomUUID().toString().substring(0, 8))
                     .build();
-            userRepository.saveAndFlush(user);
+            return userRepository.saveAndFlush(user);
 
-            Optional<User> optionalMember = userRepository.findByEmail(signUpDto.getEmail());
-            // 못찾을 경우 NullPointerException 출력
-
-            return optionalMember.orElseThrow(()-> new NullPointerException("해당 이메일에 맞는 유저를 찾을수 없습니다."));
+//            Optional<User> optionalMember = userRepository.findByEmail(signUpDto.getEmail());
+//            // 못찾을 경우 NullPointerException 출력
+//
+//            return optionalMember.orElseThrow(()-> new NullPointerException("해당 이메일에 맞는 유저를 찾을수 없습니다."));
 
         }
 

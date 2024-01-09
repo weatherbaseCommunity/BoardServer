@@ -34,18 +34,15 @@ public class User extends BaseEntity implements UserDetails{
     private Authority userRole;
 
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();     // 작성글
 
-    public void addBoard(Board board){
-        boards.add(board);
-        board.setUser(this);
-    }
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();       // 유저가 누른 좋아요
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>(); // 댓글
 
@@ -83,5 +80,9 @@ public class User extends BaseEntity implements UserDetails{
     @Override@JsonIgnore
     public boolean isEnabled() {
         return false;
+    }
+
+    public void updateNickname(String nickName){
+        this.nickName = nickName;
     }
 }

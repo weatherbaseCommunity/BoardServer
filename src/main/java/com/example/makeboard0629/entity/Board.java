@@ -1,5 +1,9 @@
 package com.example.makeboard0629.entity;
 
+import com.example.makeboard0629.dto.board.BoardDto;
+import com.example.makeboard0629.dto.board.BoardUpdateDto;
+import com.example.makeboard0629.dto.board.BoardsDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +33,7 @@ public class Board extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;      // 작성자
 
+    @JsonIgnore
     @OneToMany(mappedBy = "board", orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();       // 좋아요
 
@@ -40,8 +45,10 @@ public class Board extends BaseEntity{
     @ColumnDefault("0")
     private Integer likeCnt;        // 좋아요 수
 
+    @JsonIgnore
     @OneToMany(mappedBy = "board", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>(); // 댓글
+
     @ColumnDefault("0")
     private Integer commentCnt;     // 댓글 수
 
@@ -49,12 +56,18 @@ public class Board extends BaseEntity{
     public void changeLikeCnt(Integer likeCnt){
         this.likeCnt = likeCnt;
     }
-    public void updateBoard(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-    public void setUser(User user) {
-        this.user = user;
+
+    public void update(BoardUpdateDto boardUpdateDto){
+        this.title = boardUpdateDto.getTitle();
+        this.content = boardUpdateDto.getContent();
+        String[] hashTag = boardUpdateDto.getHashTag();
+        StringBuilder sb = new StringBuilder();
+        for (String tag : hashTag){
+            sb.append(tag).append(" ");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        this.hashTag = sb.toString();
+        this.weatherUrl = boardUpdateDto.getWeatherUrl();
     }
 
 }

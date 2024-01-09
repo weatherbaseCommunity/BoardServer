@@ -2,6 +2,9 @@ package com.example.makeboard0629.service;
 
 import com.example.makeboard0629.dto.SignInDto;
 import com.example.makeboard0629.dto.SignUpDto;
+import com.example.makeboard0629.entity.Board;
+import com.example.makeboard0629.entity.Comment;
+import com.example.makeboard0629.entity.Like;
 import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.repository.UserRepository;
 import com.example.makeboard0629.type.Authority;
@@ -13,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,8 +42,11 @@ public class MemberService implements UserDetailsService {
                 .email(signUpDto.getEmail())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickName(UUID.randomUUID().toString().substring(0, 8))
+                .boards(new ArrayList<Board>())
+                .comments(new ArrayList<Comment>())
+                .likes(new ArrayList<Like>())
                 .build();
-        return userRepository.save(user);
+        return userRepository.saveAndFlush(user);
     }
     public User authenticate(SignInDto signInDto){
         var member = this.userRepository.findByEmail(signInDto.getEmail())
@@ -71,13 +78,7 @@ public class MemberService implements UserDetailsService {
             // 새로 가입하는 유저일경우
             System.out.println("처음가입하는 아이디 입니다. 자동로그인을 진행합니다.");
             // 유저 db에 저장
-            User user = User.builder()
-                    .email(signUpDto.getEmail())
-                    .password(passwordEncoder.encode(signUpDto.getPassword()))
-                    .userRole(Authority.ROLE_USER)
-                    .nickName(UUID.randomUUID().toString().substring(0, 8))
-                    .build();
-            return userRepository.saveAndFlush(user);
+           return register(signUpDto);
 
 //            Optional<User> optionalMember = userRepository.findByEmail(signUpDto.getEmail());
 //            // 못찾을 경우 NullPointerException 출력
@@ -86,5 +87,11 @@ public class MemberService implements UserDetailsService {
 
         }
 
+    }
+    public User updateNickname(Long id, String nickname){
+        Optional<User> optionalUser = userRepository.findById(id);
+        User user = optionalUser.get();
+        user.updateNickname(nickname);
+        return userRepository.save(user);
     }
 }

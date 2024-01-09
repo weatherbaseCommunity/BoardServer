@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardDto {
+public class BoardUpdateDto {
 
+    private Long id;
     private String title;
     private String content;
     private String[] hashTag;

@@ -11,17 +11,21 @@ import lombok.Getter;
 public class BoardsDto {
     private Long id;
     private String title;
+    private String content;
     private int commentCnt;
     private int lickCnt;
     private String weatherUrl;
-    private String hashTag;
+    private String[] hashTag;
 
     public BoardsDto(Board board) {
         this.id =board.getId();
         this.title = board.getTitle();
+        this.content = board.getContent();
         this.commentCnt = board.getCommentCnt();
         this.lickCnt = board.getLikeCnt();
-        this.weatherUrl = builder().weatherUrl;
-        this.hashTag = builder().hashTag;
+        this.weatherUrl = board.getWeatherUrl();
+
+        String hash = board.getHashTag();
+        this.hashTag = hash.split(" ");
     }
 }

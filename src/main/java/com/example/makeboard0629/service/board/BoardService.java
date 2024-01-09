@@ -1,5 +1,6 @@
 package com.example.makeboard0629.service.board;
 import com.example.makeboard0629.dto.board.BoardDto;
+import com.example.makeboard0629.dto.board.BoardUpdateDto;
 import com.example.makeboard0629.dto.board.BoardsDto;
 import com.example.makeboard0629.entity.Board;
 import com.example.makeboard0629.entity.User;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,26 +24,36 @@ public class BoardService {
     private final CommentRepository commentRepository;
 
     public void saveBoard(BoardDto boardDto, String email) {
+
         User user = userRepository.findByEmail(email).orElseThrow(NullPointerException::new);
-        Board board = Board.builder()
+        String[] hashTag = boardDto.getHashTag();
+        StringBuilder sb = new StringBuilder();
+        for (String tag : hashTag){
+           sb.append(tag).append(" ");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        Board board =Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
-                .hashTag(boardDto.getHashTag())
+                .hashTag(sb.toString())
                 .weatherUrl(boardDto.getWeatherUrl())
                 .user(user)
                 .build();
-
         boardRepository.save(board);
     }
 
-//    public void updateBoard(BoardsDto boardsDto, Long boardId){
-//        Optional<Board> boardOptional = boardRepository.findById(boardId);
-//        Board board;
-//        if (boardOptional.isPresent()){
-//            board = boardOptional.get();
-//        }else throw new NullPointerException("updateBoard : 게시글을 찾을수 없습니다.");
-//        board.updateBoard(boardsDto.getTitle(), boardsDto.);
-//    }
+    public void updateBoard(BoardUpdateDto boardUpdateDto, String userEmail){
+        Optional<Board> boardOptional = boardRepository.findById(boardUpdateDto.getId());
+        Board board;
+        if (boardOptional.isPresent()){
+            board = boardOptional.get();
+            if (!board.getUser().getEmail().equals(userEmail)){
+                throw new NullPointerException("updateBoard : 게시글 작성자가 아닙니다..");
+            }
+        }else throw new NullPointerException("updateBoard : 게시글을 찾을수 없습니다.");
+        board.update(boardUpdateDto);
+        boardRepository.save(board);
+    }
 
 
     public List<BoardsDto> getAllBoards() {
@@ -57,14 +69,7 @@ public class BoardService {
         List<BoardsDto> myBoards = new ArrayList<>();
         List<Board> myBoard = boardRepository.findByUserEmail(uniqueId);
         for (Board board : myBoard) {
-            myBoards.add(BoardsDto.builder()
-                    .id(board.getId())
-                    .title(board.getTitle())
-                    .commentCnt(board.getCommentCnt())
-                    .lickCnt(board.getLikeCnt())
-                    .weatherUrl(board.getWeatherUrl())
-                    .hashTag(board.getHashTag())
-                    .build());
+            myBoards.add(new BoardsDto(board));
         }
         return myBoards;
     }

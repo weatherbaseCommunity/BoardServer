@@ -76,7 +76,7 @@ public class AuthController {
                 .build();
         jwtService.login(token, signInDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(token);
     }
 
 

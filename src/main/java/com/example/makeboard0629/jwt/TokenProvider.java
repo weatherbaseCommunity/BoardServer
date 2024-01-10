@@ -99,7 +99,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String jwt) {
         UserDetails userDetails = memberService.loadUserByUsername(this.getMemberEmail(jwt));
         log.info("userDetails.getPassword() : " + userDetails.getPassword());
-        ;
+
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

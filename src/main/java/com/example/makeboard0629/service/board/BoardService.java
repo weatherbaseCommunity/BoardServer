@@ -74,8 +74,10 @@ public class BoardService {
         return myBoards;
     }
 
-
-
+    public Board findBoardById(Long boardId){
+        Optional<Board> byId = boardRepository.findById(boardId);
+        return byId.orElse(null);
+    }
 
 
 }

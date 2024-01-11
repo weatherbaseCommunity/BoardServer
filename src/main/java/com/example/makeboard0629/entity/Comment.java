@@ -1,5 +1,6 @@
 package com.example.makeboard0629.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +19,11 @@ public class Comment extends BaseEntity{
 
     private String content;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;      // 작성자
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;    // 댓글이 달린 게시판
 

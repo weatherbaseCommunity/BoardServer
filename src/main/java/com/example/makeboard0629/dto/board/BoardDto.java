@@ -14,7 +14,11 @@ public class BoardDto {
     private String title;
     private String content;
     private String[] hashTag;
-    private String weatherUrl;
+    private String gradation;
+    private String season;
+    private String weather;
+    private String country;
+
 
 
 }

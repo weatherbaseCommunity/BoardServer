@@ -36,7 +36,10 @@ public class BoardService {
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
                 .hashTag(sb.toString())
-                .weatherUrl(boardDto.getWeatherUrl())
+                .gradation(boardDto.getGradation())
+                .season(boardDto.getSeason())
+                .weather(boardDto.getWeather())
+                .country(boardDto.getCountry())
                 .user(user)
                 .build();
         boardRepository.save(board);

@@ -28,7 +28,10 @@ public class Board extends BaseEntity{
     private String title;
     private String content;
     private String hashTag;
-    private String weatherUrl;
+    private String gradation;
+    private String season;
+    private String weather;
+    private String country;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;      // 작성자
@@ -67,7 +70,6 @@ public class Board extends BaseEntity{
         }
         sb.deleteCharAt(sb.length()-1);
         this.hashTag = sb.toString();
-        this.weatherUrl = boardUpdateDto.getWeatherUrl();
     }
 
 }

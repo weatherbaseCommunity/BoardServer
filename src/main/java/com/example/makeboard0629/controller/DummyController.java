@@ -43,7 +43,10 @@ public class DummyController {
                 .title("dummyTitle")
                 .content("dummyContentdummyContentdummyContentdummyContentdummyContentdummyContentdummyContentdummyContent")
                 .hashTag(hashTag)
-                .weatherUrl("https://dummyWeatherUrl")
+                .gradation("dummyGradation")
+                .season("dummySeason")
+                .weather("dummyWeather")
+                .country("dummyCountry")
                 .build();
 
         boardService.saveBoard(boardDto, "dummyTest@email.com");

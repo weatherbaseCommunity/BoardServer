@@ -40,6 +40,7 @@ public class BoardService {
                 .season(boardDto.getSeason())
                 .weather(boardDto.getWeather())
                 .country(boardDto.getCountry())
+                .timeZone(boardDto.getTimeZone())
                 .user(user)
                 .build();
         boardRepository.save(board);

@@ -26,12 +26,14 @@ public class Board extends BaseEntity{
     private Long id;
 
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String content;
     private String hashTag;
     private String gradation;
     private String season;
     private String weather;
     private String country;
+    private String timeZone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;      // 작성자

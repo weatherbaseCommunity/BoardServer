@@ -18,6 +18,7 @@ public class BoardDto {
     private String season;
     private String weather;
     private String country;
+    private String timeZone;
 
 
 

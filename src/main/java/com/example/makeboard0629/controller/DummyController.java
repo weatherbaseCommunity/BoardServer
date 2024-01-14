@@ -47,6 +47,7 @@ public class DummyController {
                 .season("dummySeason")
                 .weather("dummyWeather")
                 .country("dummyCountry")
+                .timeZone("dummyTimezone")
                 .build();
 
         boardService.saveBoard(boardDto, "dummyTest@email.com");

@@ -3,7 +3,6 @@ package com.example.makeboard0629.controller;
 import com.example.makeboard0629.dto.board.CommentDto;
 import com.example.makeboard0629.entity.Comment;
 import com.example.makeboard0629.entity.User;
-import com.example.makeboard0629.service.board.BoardService;
 import com.example.makeboard0629.service.board.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,6 @@ public class CommentController {
 
     @PostMapping("/edit")
     public ResponseEntity<?> editComment(@AuthenticationPrincipal User user, @RequestBody CommentDto commentDto) {
-        System.out.println(1);
         var flag  = commentService.editComment(user, commentDto);
 
         if (flag!= null) return ResponseEntity.ok("수정되었습니다.");

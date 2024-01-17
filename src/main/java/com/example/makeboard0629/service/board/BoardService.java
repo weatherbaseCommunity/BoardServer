@@ -82,6 +82,30 @@ public class BoardService {
         Optional<Board> byId = boardRepository.findById(boardId);
         return byId.orElse(null);
     }
+    public List<BoardsDto> search(String type, String search){
+        List<BoardsDto> boardsDtoList = new ArrayList<>();
+        if (type.equals("hashTag")){
+            List<Board> byHashTagContaining = boardRepository.findByHashTagContaining(search);
+            for (Board board : byHashTagContaining) {
+                boardsDtoList.add(new BoardsDto(board));
+            }
+            return boardsDtoList;
+        }else if (type.equals("title")){
+            List<Board> byTitleContaining = boardRepository.findByTitleContaining(search);
+            for (Board board : byTitleContaining) {
+                boardsDtoList.add(new BoardsDto(board));
+            }
+            return boardsDtoList;
+        }else if (type.equals("content")){
+            List<Board> byContentContaining = boardRepository.findByContentContaining(search);
+            for (Board board : byContentContaining) {
+                boardsDtoList.add(new BoardsDto(board));
+            }
+            return boardsDtoList;
+        }else {
+            throw new NullPointerException("찾을수가 없습니다.");
+        }
+    }
 
 
 }

@@ -20,4 +20,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "select b from  Board b where b.id =:boardId")
     Optional<Board> findById(@Param("boardId") Long boardId);
 
+    List<Board> findByHashTagContaining(String search);
+    List<Board> findByTitleContaining(String search);
+    List<Board> findByContentContaining(String search);
+
+
 }

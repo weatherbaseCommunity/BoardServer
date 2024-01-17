@@ -8,13 +8,14 @@ import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.service.board.BoardService;
 import com.example.makeboard0629.service.board.LikeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
@@ -35,7 +36,13 @@ public class BoardController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
+    @GetMapping("/get/{boardId}")
+    public ResponseEntity<?> getBoard(@PathVariable ("boardId") Long boardId){
+        log.info("boardId= ", boardId);
+        Board boardById = boardService.findBoardById(boardId);
+        BoardsDto boardsDto = new BoardsDto(boardById);
+        return ResponseEntity.ok().body(boardsDto);
+    }
 
     @GetMapping("/myBoard")
     public ResponseEntity<List<BoardsDto>> getBoardList(@AuthenticationPrincipal User user) {
@@ -53,7 +60,7 @@ public class BoardController {
 
         Board board = boardService.findBoardById(boardId);
        likeService.addLike(board, user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok("좋아요를 눌렀습니다.");
     }
 
     @PostMapping("/decreaseLike")
@@ -61,7 +68,13 @@ public class BoardController {
 
         Board board = boardService.findBoardById(boardId);
         likeService.decreaseLike(board, user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok("좋아요를 취소했습니다.");
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchBoard(@RequestParam(name = "type") String type, @RequestParam(name = "search") String search){
+        List<BoardsDto> boardList = boardService.search(type, search);
+        return ResponseEntity.ok(boardList);
     }
 
 

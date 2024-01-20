@@ -4,8 +4,10 @@ import com.example.makeboard0629.dto.board.BoardDto;
 import com.example.makeboard0629.dto.board.BoardUpdateDto;
 import com.example.makeboard0629.dto.board.BoardsDto;
 import com.example.makeboard0629.entity.Board;
+import com.example.makeboard0629.entity.Comment;
 import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.service.board.BoardService;
+import com.example.makeboard0629.service.board.CommentService;
 import com.example.makeboard0629.service.board.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
     private final LikeService likeService;
+    private final CommentService commentService;
 
     @PostMapping("/save")
     public ResponseEntity<?> saveBoard(@AuthenticationPrincipal User user, @RequestBody BoardDto boardDto) {
@@ -40,7 +43,8 @@ public class BoardController {
     public ResponseEntity<?> getBoard(@PathVariable ("boardId") Long boardId){
         log.info("boardId= ", boardId);
         Board boardById = boardService.findBoardById(boardId);
-        BoardsDto boardsDto = new BoardsDto(boardById);
+        List<Comment> commentList = commentService.findAll(boardId);
+        BoardsDto boardsDto = new BoardsDto(boardById, commentList);
         return ResponseEntity.ok().body(boardsDto);
     }
 

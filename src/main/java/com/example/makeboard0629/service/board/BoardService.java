@@ -3,6 +3,7 @@ import com.example.makeboard0629.dto.board.BoardDto;
 import com.example.makeboard0629.dto.board.BoardUpdateDto;
 import com.example.makeboard0629.dto.board.BoardsDto;
 import com.example.makeboard0629.entity.Board;
+import com.example.makeboard0629.entity.Comment;
 import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.repository.BoardRepository;
 import com.example.makeboard0629.repository.CommentRepository;
@@ -10,6 +11,7 @@ import com.example.makeboard0629.repository.LikeRepository;
 import com.example.makeboard0629.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
     public void saveBoard(BoardDto boardDto, String email) {
 
@@ -46,6 +49,7 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+    @Transactional
     public void updateBoard(BoardUpdateDto boardUpdateDto, String userEmail){
         Optional<Board> boardOptional = boardRepository.findById(boardUpdateDto.getId());
         Board board;
@@ -64,7 +68,9 @@ public class BoardService {
         List<Board> boards = boardRepository.findAllBoard();
         List<BoardsDto> boardsDtoList = new ArrayList<>();
         for (Board board : boards) {
-            boardsDtoList.add(new BoardsDto(board));
+            Long boardId = board.getId();
+            List<Comment> commentList = commentService.findAll(boardId);
+            boardsDtoList.add(new BoardsDto(board, commentList));
         }
         return boardsDtoList;
     }
@@ -73,7 +79,9 @@ public class BoardService {
         List<BoardsDto> myBoards = new ArrayList<>();
         List<Board> myBoard = boardRepository.findByUserEmail(uniqueId);
         for (Board board : myBoard) {
-            myBoards.add(new BoardsDto(board));
+            Long boardId = board.getId();
+            List<Comment> commentList = commentService.findAll(boardId);
+            myBoards.add(new BoardsDto(board, commentList));
         }
         return myBoards;
     }
@@ -87,19 +95,25 @@ public class BoardService {
         if (type.equals("hashTag")){
             List<Board> byHashTagContaining = boardRepository.findByHashTagContaining(search);
             for (Board board : byHashTagContaining) {
-                boardsDtoList.add(new BoardsDto(board));
+                Long boardId = board.getId();
+                List<Comment> commentList = commentService.findAll(boardId);
+                boardsDtoList.add(new BoardsDto(board, commentList));
             }
             return boardsDtoList;
         }else if (type.equals("title")){
             List<Board> byTitleContaining = boardRepository.findByTitleContaining(search);
             for (Board board : byTitleContaining) {
-                boardsDtoList.add(new BoardsDto(board));
+                Long boardId = board.getId();
+                List<Comment> commentList = commentService.findAll(boardId);
+                boardsDtoList.add(new BoardsDto(board, commentList));
             }
             return boardsDtoList;
         }else if (type.equals("content")){
             List<Board> byContentContaining = boardRepository.findByContentContaining(search);
             for (Board board : byContentContaining) {
-                boardsDtoList.add(new BoardsDto(board));
+                Long boardId = board.getId();
+                List<Comment> commentList = commentService.findAll(boardId);
+                boardsDtoList.add(new BoardsDto(board, commentList));
             }
             return boardsDtoList;
         }else {

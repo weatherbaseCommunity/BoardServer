@@ -8,6 +8,8 @@ import com.example.makeboard0629.jwt.TokenProvider;
 import com.example.makeboard0629.service.JwtService;
 import com.example.makeboard0629.service.MemberService;
 import com.example.makeboard0629.service.board.BoardService;
+import com.example.makeboard0629.service.board.CommentService;
+import com.example.makeboard0629.service.board.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ public class DummyController {
 
     private final MemberService memberService;
     private final BoardService boardService;
+    private final LikeService likeService;
+    private final CommentService commentService;
     private final TokenProvider tokenProvider;
     private final JwtService jwtService;
 

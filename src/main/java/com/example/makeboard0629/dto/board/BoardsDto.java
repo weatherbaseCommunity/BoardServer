@@ -1,11 +1,13 @@
 package com.example.makeboard0629.dto.board;
 
 import com.example.makeboard0629.entity.Board;
+import com.example.makeboard0629.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -25,7 +27,9 @@ public class BoardsDto {
     private String nickname;
     private LocalDateTime createdTime;
 
-    public BoardsDto(Board board) {
+    private List<Comment> commentList;
+
+    public BoardsDto(Board board, List<Comment> commentList) {
         this.id =board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
@@ -40,5 +44,6 @@ public class BoardsDto {
         this.createdTime = board.getCreatedDate();
         String hash = board.getHashTag();
         this.hashTag = hash.split(" ");
+        this.commentList = commentList;
     }
 }

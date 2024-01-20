@@ -10,6 +10,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByBoardId(Long boardId);
     List<Comment> findAllByUserEmail(String uniqueId);
     void deleteById(Long commentId);
-
+    void deleteAllByBoardId(Long boardId);
+    void deleteAllByUserId(Long userId);
     Optional<Comment> findById(Long commentId);
 }

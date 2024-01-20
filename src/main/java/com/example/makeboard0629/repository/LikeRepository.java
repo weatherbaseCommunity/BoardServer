@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
     void deleteByUserIdAndBoardId(Long userId, Long boardId);
+    void deleteAllByBoardId(Long boardId);
+    void deleteAllByUserId(Long userId);
     Boolean existsByUserIdAndBoardId(Long userId, Long boardId);
     List<Like> findAllByUserId(Long userId);
     List<Like> findAllByBoardId(Long boardId);

@@ -27,6 +27,7 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .content(commentDto.getContent())
                 .user(user)
+                .userNickname(user.getNickName())
                 .board(board)
                 .build();
         return commentRepository.save(comment);
@@ -47,7 +48,7 @@ public class CommentService {
         }
 
         Comment comment = optComment.get();
-        comment.update(commentDto.getContent());
+        comment.update(commentDto.getContent(), user.getNickName());
 
         return commentRepository.save(comment);
 

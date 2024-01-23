@@ -9,6 +9,7 @@ import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.repository.UserRepository;
 import com.example.makeboard0629.type.Authority;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -93,5 +95,25 @@ public class MemberService implements UserDetailsService {
         User user = optionalUser.get();
         user.updateNickname(nickname);
         return userRepository.save(user);
+    }
+
+    public UserinfoDto getMyInfo(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        User user = optionalUser.get();
+
+        return new UserinfoDto(user);
+    }
+
+    @Getter
+    static class UserinfoDto{
+        private String nickname;
+        private String email;
+        private LocalDateTime createdDateTime;
+
+        public UserinfoDto(User user){
+            nickname = user.getNickName();
+            email = user.getEmail();
+            createdDateTime = user.getCreatedDate();
+        }
     }
 }

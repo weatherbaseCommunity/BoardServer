@@ -1,5 +1,6 @@
 package com.example.makeboard0629.controller;
 
+import com.example.makeboard0629.dto.UpdateNicknameDto;
 import com.example.makeboard0629.dto.board.BoardDto;
 import com.example.makeboard0629.entity.User;
 import com.example.makeboard0629.service.MemberService;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final MemberService memberService;
     @PostMapping("/mypage/update")
-    public ResponseEntity<?> saveBoard(@AuthenticationPrincipal User user, @RequestBody String nickname) {
+    public ResponseEntity<?> saveBoard(@AuthenticationPrincipal User user, @RequestBody UpdateNicknameDto updateNicknameDto) {
         System.out.println(user.getId());
-        var result = memberService.updateNickname(user.getId(),nickname);
+        var result = memberService.updateNickname(user.getId(),updateNicknameDto.getNickname());
         return ResponseEntity.ok(result);
     }
 
